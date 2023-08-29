@@ -1,0 +1,71 @@
+Gigabyte:
+   Try using the Gigabyte CPU Support List to verify stepping names.
+
+--------------------------------------------------------------------------------
+
+Intel:
+   Cascade Lake refresh Xeons: Xeon Scalable 3xxxR, 4xxxR & 6xxxR (to be released
+   2020-02-23): still (0,6),(5,5),7?
+   
+   Amber Lake refresh: What is the FMS for its i*-10000 parts?
+
+   Cannon Lake [Palm Cove] (0,6),(6,6) spec update.
+   Ice Lake [Sunny Cove] (0,6),(6,10) spec update.
+   Ice Lake [Sunny Cove] (0,6),(6,12) spec update.
+   Tiger Lake [Willow Cove] (0,6),(8,13) spec update.
+   Spring Hill (aka Ice Lake NPP-I) (0,6),(9,13) spec update.
+   Comet Lake [Kaby Lake] (0,6),(10,5) spec update.
+   Comet Lake [Kaby Lake] (0,6),(10,6) spec update.
+   Rocket Lake (~2020?)
+   Willow Cove (~2020)
+   Golden Cove (~2021).
+   Sapphire Rapids (~2021).
+
+   Atom XMM 7272 (SoFIA) (0,6),(6,5) spec update.
+   Atom Elkhart Lake [Tremont] (0,6),(8,6) spec update.  (wrong name?)
+   Atom Elkhart Lake [Tremont] (0,6),(9,6) spec update.
+   Atom Jasper Lake [Tremont] (0,6),(9,12) spec update.
+   Atom P5900 (Snow Ridge?) [Tremont]: f/m/s unknown.
+   Atom [Gracemont] (~2021).
+
+   Atom Puma 7 (0,6),(6,14) spec update.
+
+   Lakefield  (Sunny Cove + 4x Tremont?): Sunny Cove & Tremont FMS?
+   Alder Lake (Golden Cove + Gracemont) [~2021]
+
+AMD:
+   Add EPYC series numbers (e.g. EPYC 7000 = Rome)
+
+   Zen 3 models (Vermeer: desktop, Milan: server, Genesis Peak: Threadripper)
+
+--------------------------------------------------------------------------------
+
+These are not really future, but I have very little data on them:
+
+   Intel: Xeon Phi (Knights Ferry) (0,11),(0,0).
+   Intel: Xeon Phi (Knights Corner) (0,11),(0,1) with 0x20000001 leaf.
+   Intel: Xeon Phi (Knights Mill) (0,6),(8,5).
+   Intel: Atom Z3400 (Merrifield) [Silvermont] (0,6),(4,10).
+   Intel: Atom (Apollo Lake) [Goldmont] (0,6),(5,12),2.
+   Intel: Atom x3-C3000 (SoFIA) [Silvermont] (0,6),(5,13).
+   Intel: Spreadtrum SC9853I-IA [Airmont] (0,6),(7,5).
+   Intel: Atom S12x9 (Briarwood) is based on Cedar Trail, but the Intel docs
+          provide no CPUID identification values.  And I can find no examples
+          online.  Does anyone know the CPUID family/model/steppings?
+   AMD: Cato (7,15),(2,6) (real or only engr samples?)
+   AMD: Geneva (the Athlon II Neo counterpart of the Athlon II mobile Champlain, 
+                or the V-Series Champlain?) 
+               [not seen in any revision guides yet, though]
+   VIA: 0xc0000003 leaf (I have no info)
+   VIA: 0xc0000004 leaf (I have no info)
+   Zhaoxin: ZhangJiang  (more models/steppings than (0,6),(0,15),14?
+   Zhaoxin: WuDaoKou    (more models than (0,7),(1,11)?)
+   Zhaoxin: LuJiaZui    (more models than (0,7),(3,11)?)
+
+--------------------------------------------------------------------------------
+
+Stashes of cpuid information:
+
+   http://instlatx64.atw.hu (aka https://github.com/InstLatx64/InstLatx64)
+   http://www.cpu-world.com (hard to navigate)
+   http://valid.x86.fr/records.html (limited info)

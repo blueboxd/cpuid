@@ -1,0 +1,149 @@
+#!/usr/bin/perl
+
+use autodie;
+use strict;
+use utf8;
+use warnings qw(all);
+
+use Getopt::Long;
+use Pod::Usage;
+
+my $vendor = '';
+my $family = '';
+my $model = '';
+my $stepping = '';
+my $help;
+
+GetOptions(
+    q(help)       => \$help,
+    q(vendor=s)   => \$vendor,
+    q(family=i)   => \$family,
+    q(model=i)    => \$model,
+    q(stepping=i) => \$stepping,
+) or pod2usage(q(-verbose) => 1);
+pod2usage(q(-verbose) => 1) if $help;
+
+if ( $vendor ne '' or $family ne '' or $model ne '' or $stepping ne '' ) {
+   if ( $vendor ne 'GenuineIntel' and  $vendor ne 'AuthenticAMD' ) {
+      print STDERR "vendor has to be either \"GenuineIntel\" or \"AuthenticAMD\"\n";
+      pod2usage(q(-verbose) => 1);
+   }
+  if ( $vendor eq '' or $family eq '' or  $model eq '' or $stepping eq '' ) {
+      print STDERR "When specifying input manually all input values \"vendor, family, model and stepping\" has to be specified\n";
+      pod2usage(q(-verbose) => 1);
+  }
+} else { 
+   # Read cpuinfo from STDIN
+   while (<STDIN>) {
+      if (/^vendor_id\s*: (.*)$/) {
+         $vendor = $1
+      }
+      if (/^cpu family\s*: (.*)$/) {
+         $family = $1
+      }
+      if (/^model\s*: (.*)$/) {
+         $model = $1
+      }
+      if (/^stepping\s*: (.*)$/) {
+         $stepping = $1
+      }
+   }
+}  
+
+my $xfamily = int($family / 16);
+$family  = $family % 16;
+
+my $xmodel = int($model / 16);
+$model  = $model % 16;
+
+my $eax = (  (($xfamily  & 0xff) << 20)
+           + (($xmodel   &  0xf) << 16)
+           + (($family   &  0xf) <<  8)
+           + (($model    &  0xf) <<  4)
+           + (($stepping &  0xf) <<  0));
+
+printf("CPU:\n");
+if ($vendor eq "GenuineIntel") {
+   printf("   0x%08x 0x%02x: eax=0x%08x ebx=0x%08x ecx=0x%08x edx=0x%08x\n",
+          0, 0, 1, 0x756e6547, 0x6c65746e, 0x49656e69);
+} elsif ($vendor eq "AuthenticAMD") {
+   printf("   0x%08x 0x%02x: eax=0x%08x ebx=0x%08x ecx=0x%08x edx=0x%08x\n",
+          0, 0, 1, 0x68747541, 0x444d4163, 0x69746e65);
+}
+printf("   0x%08x 0x%02x: eax=0x%08x ebx=0x%08x ecx=0x%08x edx=0x%08x\n",
+       1, 0, $eax, 0, 0, 0);
+
+__END__
+
+=pod
+
+=head1 NAME
+
+cpuinfo2cpuid
+
+=head1 SYNOPSIS
+
+cpuinfo2cpuid
+
+  or
+    
+cpuinfo2cpuid -help
+
+  or
+
+cpuinfo2cpuid -vendor=<GenuineIntel|AuthenticAMD> -family=<num> -model=<num> -stepping=<num>
+
+=head1 DESCRIPTION
+
+Expects /proc/cpuinfo data on stdin and converts it to cpuid-like HEX data structure suitable as the input for cpuid -f <file> utility.
+Alternatively, user can specify CPU vendor, family, model and stepping on the command line. 
+
+=head1 OPTIONS
+
+=over 4
+
+=item -help
+
+Displays a brief help message.
+  
+=item -vendor
+
+CPU vendor. Can be either GenuineIntel or AuthenticAMD.
+
+=item -family
+
+CPU family in decimal notation.
+
+=item -model
+
+CPU model in decimal notation.
+
+=item -stepping
+
+CPU stepping in decimal notation.
+
+
+=item -help
+
+Displays a brief help message.
+  
+
+=back
+
+=head1 LIMITATIONS
+
+Only Intel & AMD cpuinfo data are supported at the moment. 
+
+=head1 EXAMPLES
+
+cpuinfo2cpuid < /proc/cpuinfo | cpuid -f - | grep '(synth)'
+
+Specifying CPU vendor, family, model and stepping on command line
+
+cpuinfo2cpuid.pl -vendor=GenuineIntel -family=6 -model=58 -stepping=9 | cpuid -f - | grep '(synth)'
+
+=head1 AUTHOR
+  
+Todd Allen <cpuid@etallen.com>, Jirka Hladky <jhladky@gmail.com>
+
+=cut
